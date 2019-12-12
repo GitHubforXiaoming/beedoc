@@ -26,6 +26,18 @@ func PageUtil(count int, pageNo int, pageSize int, list interface{}) Page {
     }
     return Page{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
 }
+
+func (this *MainController) Get() {
+	currentPage := this.GetString("p")
+	if len(currentPage) == 0 {
+		this.Data["PageNo"] = 1
+	} else {
+		this.Data["PageNo"] = currentPage
+	}
+	this.Data["TotalPage"] = 12
+	this.TplName = "index.tpl"
+}
+
 ```
 
 页面是使用 js 插件进行分页 https://github.com/lyonlai/bootstrap-paginator
@@ -35,8 +47,8 @@ func PageUtil(count int, pageNo int, pageSize int, list interface{}) Page {
 <script type="text/javascript">
   $(function () {
     $("#page").bootstrapPaginator({
-      currentPage: '{{.Page.PageNo}}',
-      totalPages: '{{.Page.TotalPage}}',
+      currentPage: '{{.PageNo}}',
+      totalPages: '{{.TotalPage}}',
       bootstrapMajorVersion: 3,
       size: "small",
       onPageClicked: function(e,originalEvent,type,page){
